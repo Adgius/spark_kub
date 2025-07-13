@@ -6,23 +6,22 @@ metadata:
   labels:
     app: jupyter
 spec:
-  serviceAccountName: spark  # чтобы Spark внутри мог обращаться к API
+  serviceAccountName: spark
   containers:
     - name: jupyter
       image: jupyter/pyspark-notebook:latest
       ports:
         - containerPort: 8888
       env:
-        - name: SPARK_MASTER
-          value: spark://spark-master.spark.svc.cluster.local:7077
         - name: PYSPARK_PYTHON
           value: python3
         - name: PYSPARK_DRIVER_PYTHON
           value: jupyter
         - name: PYSPARK_DRIVER_PYTHON_OPTS
-          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root"
-      command: ["start-notebook.sh"]
-      args: ["--NotebookApp.token=''"]  # отключает токен доступа
+          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''"
+        - name: SPARK_MASTER
+          value: spark://spark-master.spark.svc.cluster.local:7077
+      command: [start-notebook.sh]
 ---
 apiVersion: v1
 kind: Service
