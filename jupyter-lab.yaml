@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jupyter
+  namespace: spark
+  labels:
+    app: jupyter
+spec:
+  serviceAccountName: spark  # чтобы Spark внутри мог обращаться к API
+  containers:
+    - name: jupyter
+      image: jupyter/pyspark-notebook:latest
+      ports:
+        - containerPort: 8888
+      env:
+        - name: SPARK_MASTER
+          value: spark://spark-master.spark.svc.cluster.local:7077
+        - name: PYSPARK_PYTHON
+          value: python3
+        - name: PYSPARK_DRIVER_PYTHON
+          value: jupyter
+        - name: PYSPARK_DRIVER_PYTHON_OPTS
+          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root"
+      command: ["start-notebook.sh"]
+      args: ["--NotebookApp.token=''"]  # отключает токен доступа
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter
+  namespace: spark
+spec:
+  selector:
+    app: jupyter
+  ports:
+    - port: 8888
+      targetPort: 8888
+      nodePort: 31888
+  type: NodePort
