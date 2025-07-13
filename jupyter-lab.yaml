@@ -12,6 +12,7 @@ spec:
       image: jupyter/pyspark-notebook:latest
       ports:
         - containerPort: 8888
+        - containerPort: 4040
       securityContext:
         runAsUser: 0
         allowPrivilegeEscalation: true
@@ -40,4 +41,7 @@ spec:
     - port: 8888
       targetPort: 8888
       nodePort: 31888
+    - port: 4040
+      targetPort: 4040
+      nodePort: 31440
   type: NodePort
