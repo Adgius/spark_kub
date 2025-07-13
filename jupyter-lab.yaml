@@ -12,6 +12,9 @@ spec:
       image: jupyter/pyspark-notebook:latest
       ports:
         - containerPort: 8888
+      securityContext:
+        runAsUser: 0
+        allowPrivilegeEscalation: true
       env:
         - name: JUPYTER_PORT 
           value: "8888"
