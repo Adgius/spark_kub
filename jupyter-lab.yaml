@@ -13,6 +13,8 @@ spec:
       ports:
         - containerPort: 8888
       env:
+        - name: JUPYTER_PORT 
+          value: "8888"
         - name: PYSPARK_PYTHON
           value: python3
         - name: PYSPARK_DRIVER_PYTHON
