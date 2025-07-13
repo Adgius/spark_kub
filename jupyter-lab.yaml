@@ -39,9 +39,11 @@ spec:
     app: jupyter
   ports:
     - port: 8888
+      name: "jupyter"
       targetPort: 8888
       nodePort: 31888
     - port: 4040
+      name: "spark"
       targetPort: 4040
       nodePort: 31440
   type: NodePort
