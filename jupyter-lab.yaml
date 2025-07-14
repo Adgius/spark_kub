@@ -24,10 +24,15 @@ spec:
         - name: PYSPARK_DRIVER_PYTHON
           value: jupyter
         - name: PYSPARK_DRIVER_PYTHON_OPTS
-          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''"
+          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.token=''"
         - name: SPARK_MASTER
           value: spark://spark-master.spark.svc.cluster.local:7077
-      command: [start-notebook.sh]
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          apt-get update && \
+          apt-get install -y iputils-ping net-tools curl dnsutils && \
+          start-notebook.sh
 ---
 apiVersion: v1
 kind: Service
