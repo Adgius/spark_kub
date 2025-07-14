@@ -17,15 +17,16 @@ spec:
     spec:
       containers:
         - name: spark-master
-          image: bitnami/spark:latest
-          command:
-            - /opt/bitnami/spark/bin/spark-class
+          image: apache/spark:3.5.1
+          command: ["/opt/spark/bin/spark-class"]
           args:
             - org.apache.spark.deploy.master.Master
             - --host
             - spark-master
             - --port
             - "7077"
+            - --webui-port
+            - "8080"
           ports:
             - containerPort: 7077
             - containerPort: 8080
@@ -46,4 +47,4 @@ spec:
     - name: webui
       port: 8080
       targetPort: 8080
-  type: NodePort
+  type: ClusterIP
