@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  spark-master:
+    image: apache/spark:3.4.1
+    container_name: spark-master
+    command: bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.master.Master --host spark-master"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+    ports:
+      - "7077:7077"   # Spark master port
+      - "8080:8080"   # Spark master UI
+    networks:
+      - spark-net
+
+  spark-worker:
+    image: apache/spark:3.4.1
+    container_name: spark-worker
+    command: bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"   # Spark worker UI
+    networks:
+      - spark-net
+
+  jupyterlab:
+    build:
+      context: .
+      dockerfile: jupyter.Dockerfile
+    container_name: jupyterlab
+    ports:
+      - "8888:8888"
+    environment:
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=jupyter
+      - PYSPARK_DRIVER_PYTHON_OPTS=lab --NotebookApp.token='' --NotebookApp.password=''
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    depends_on:
+      - spark-master
+    networks:
+      - spark-net
+
+networks:
+  spark-net:
