@@ -24,7 +24,7 @@ spec:
         - name: PYSPARK_DRIVER_PYTHON
           value: jupyter
         - name: PYSPARK_DRIVER_PYTHON_OPTS
-          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.token=''"
+          value: "lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.token='' --ServerApp.password=''"
         - name: SPARK_MASTER
           value: spark://spark-master.spark.svc.cluster.local:7077
       command: ["/bin/bash", "-c"]
